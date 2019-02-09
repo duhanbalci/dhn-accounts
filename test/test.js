@@ -1,5 +1,5 @@
 const assert = require('assert')
-const dhnAccounts = require('../index')
+const dhnAccounts = require('../src')
 const accounts = new dhnAccounts
 
 const data = {}
