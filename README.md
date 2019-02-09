@@ -124,7 +124,7 @@ accounts.i18n.en = {
 - **username** <sup>_string_</sup>: optional if email entered
 - **email** <sup>_string_</sup>: _optional if username entered_
 - **password** <sup>_string_</sup>: password
-- **profile** <sup>_object_</sup>: optional. You can access it from jwt payload
+- **profile?** <sup>_object_</sup>: optional. You can access it from jwt payload
 
 ---
 ### accounts.login(login, password)
