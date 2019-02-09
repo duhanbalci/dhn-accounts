@@ -121,58 +121,58 @@ accounts.i18n.en = {
 
 ### accounts.createUser(options)
 **options** <sup>_Object_</sup>
-- username <sup>_string_</sup>: optional if email entered
-- email <sup>_string_</sup>: _optional if username entered_
-- password <sup>_string_</sup>: password
-- profile <sup>_object_</sup>: optional. You can access it from jwt payload
+- **username** <sup>_string_</sup>: optional if email entered
+- **email** <sup>_string_</sup>: _optional if username entered_
+- **password** <sup>_string_</sup>: password
+- **profile** <sup>_object_</sup>: optional. You can access it from jwt payload
 
 ---
 ### accounts.login(login, password)
-**login** <sup>_string_</sup>: username or email adress
-**password** <sup>_string_</sup>: password
+- **login** <sup>_string_</sup>: username or email adress
+- **password** <sup>_string_</sup>: password
 
 ---
 ### accounts.verifyToken(jwtToken)
-**jwtToken**  <sup>_string_</sup>:  json web token
+- **jwtToken**  <sup>_string_</sup>:  json web token
 
 ---
 ### accounts.changePassword(userId, newPassword)
-**userId** <sup>_string_</sup>: user id
-**newPassword** <sup>_string_</sup>: new password
+- **userId** <sup>_string_</sup>: user id
+- **newPassword** <sup>_string_</sup>: new password
 
 ---
 ### accounts.changePasswordByUser(userId, oldPass, newPass)
-**userId** <sup>_string_</sup>: user id
-**oldPass** <sup>_string_</sup>: old password
-**newPass** <sup>_string_</sup>: new password
+- **userId** <sup>_string_</sup>: user id
+- **oldPass** <sup>_string_</sup>: old password
+- **newPass** <sup>_string_</sup>: new password
 
 ---
 ### accounts.sendVerificationEmail(emailAdress)
-**emailAdress** <sup>_string_</sup>: email adress
+- **emailAdress** <sup>_string_</sup>: email adress
 
 ---
 ### accounts.verifyEmail(verificationCode)
-**verificationCode** <sup>_string_</sup>: verificationCode from email
+- **verificationCode** <sup>_string_</sup>: verificationCode from email
 
 ---
 ### accounts.sendPasswordRecoveryEmail(emailAdress)
-**emailAdress** <sup>_string_</sup>: email adress
+- **emailAdress** <sup>_string_</sup>: email adress
 
 ---
 ### accounts.passwordRecovery(recoveryCode, newPassword)
-**recoveryCode** <sup>_string_</sup>: recovery code from email
-**newPassword** <sup>_string_</sup>: email adress
+- **recoveryCode** <sup>_string_</sup>: recovery code from email
+- **newPassword** <sup>_string_</sup>: email adress
 
 ---
 ### accounts.setUsername(userId, newUsername)
-**userId** <sup>_string_</sup>: user id
-**newUsername** <sup>_string_</sup>: new username
+- **userId** <sup>_string_</sup>: user id
+- **newUsername** <sup>_string_</sup>: new username
 
 ---
 ### accounts.addEmail(userId, newEmail)
-**userId** <sup>_string_</sup>: user id
-**newEmail** <sup>_string_</sup>: email adress
+- **userId** <sup>_string_</sup>: user id
+- **newEmail** <sup>_string_</sup>: email adress
 
 ---
 ### accounts.removeEmail(emailAdress)
-**emailAdress** <sup>_string_</sup>: email adress
+- **emailAdress** <sup>_string_</sup>: email adress
