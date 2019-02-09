@@ -2,12 +2,13 @@
 
 A promise based account management library for Node.js and MongoDB
 
-[Usage](#usage)
+### [Usage](#usage)
 - [Basic Configurations](#basic-configurations)
 - [Functions](#functions)
 - [Email Templates](#email-templates)
 
-[Api](#api)
+### [Api](#api)
+### [Internationalization](##internationalization)
 
 # Usage
 
