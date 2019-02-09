@@ -6,9 +6,21 @@ A promise based account management library for Node.js and MongoDB
 - [Basic Configurations](#basic-configurations)
 - [Functions](#functions)
 - [Email Templates](#email-templates)
+- [Internationalizations](#internationalization)
 
 ### [Api](#api)
-### [Internationalization](##internationalization)
+- [accounts.createUser](#createUser)
+- [accounts.login](#login)
+- [accounts.verifyToken](#verifyToken)
+- [accounts.changePassword](#changePassword)
+- [accounts.changePasswordByUser](#changePasswordByUser)
+- [accounts.sendVerificationEmail](#sendVerificationEmail)
+- [accounts.verifyEmail](#verifyEmail)
+- [accounts.sendPasswordRecoveryEmail](#sendPasswordRecoveryEmail)
+- [accounts.passwordRecovery](#passwordRecovery)
+- [accounts.setUsername](#setUsername)
+- [accounts.addEmail](#addEmail)
+- [accounts.removeEmail](#removeEmail)
 
 # Usage
 
@@ -95,69 +107,7 @@ accounts.passwordRecoveryEmail.template  =  '<a href="{passwordRecoveryCode}">Cl
 accounts.passwordRecoveryEmail.subject  =  'Password Recovery Mail'
 ```
 
-
-# Api
-
-### accounts.createUser(options)
-**options** <sup>_Object_</sup>
-- username <sup>_string_</sup>: optional if email entered
-- email <sup>_string_</sup>: _optional if username entered_
-- password <sup>_string_</sup>: password
-- profile <sup>_object_</sup>: optional. You can access it from jwt payload
-
----
-### accounts.login(login, password)
-**login** <sup>_string_</sup>: username or email adress
-**password** <sup>_string_</sup>: password
-
----
-### accounts.verifyToken(jwtToken)
-**jwtToken**  <sup>_string_</sup>:  json web token
-
----
-### accounts.changePassword(userId, newPassword)
-**userId** <sup>_string_</sup>: user id
-**newPassword** <sup>_string_</sup>: new password
-
----
-### accounts.changePasswordByUser(userId, oldPass, newPass)
-**userId** <sup>_string_</sup>: user id
-**oldPass** <sup>_string_</sup>: old password
-**newPass** <sup>_string_</sup>: new password
-
----
-### accounts.sendVerificationEmail(emailAdress)
-**emailAdress** <sup>_string_</sup>: email adress
-
----
-### accounts.verifyEmail(verificationCode)
-**verificationCode** <sup>_string_</sup>: verificationCode from email
-
----
-### accounts.sendPasswordRecoveryEmail(emailAdress)
-**emailAdress** <sup>_string_</sup>: email adress
-
----
-### accounts.passwordRecovery(recoveryCode, newPassword)
-**recoveryCode** <sup>_string_</sup>: recovery code from email
-**newPassword** <sup>_string_</sup>: email adress
-
----
-### accounts.setUsername(userId, newUsername)
-**userId** <sup>_string_</sup>: user id
-**newUsername** <sup>_string_</sup>: new username
-
----
-### accounts.addEmail(userId, newEmail)
-**userId** <sup>_string_</sup>: user id
-**newEmail** <sup>_string_</sup>: email adress
-
----
-### accounts.removeEmail(emailAdress)
-**emailAdress** <sup>_string_</sup>: email adress
-
-
-# Internationalization
+### Internationalization
 
 ```javascript
 //Defaults
@@ -178,3 +128,63 @@ accounts.i18n.en = {
   recoveryEmailFail: 'failed to send password recovery email',
 }
 ```
+
+# Api
+
+### accounts.createUser(options) {#createUser}
+**options** <sup>_Object_</sup>
+- username <sup>_string_</sup>: optional if email entered
+- email <sup>_string_</sup>: _optional if username entered_
+- password <sup>_string_</sup>: password
+- profile <sup>_object_</sup>: optional. You can access it from jwt payload
+
+---
+### accounts.login(login, password) {#login}
+**login** <sup>_string_</sup>: username or email adress
+**password** <sup>_string_</sup>: password
+
+---
+### accounts.verifyToken(jwtToken) {#verifyToken}
+**jwtToken**  <sup>_string_</sup>:  json web token
+
+---
+### accounts.changePassword(userId, newPassword) {#changePassword}
+**userId** <sup>_string_</sup>: user id
+**newPassword** <sup>_string_</sup>: new password
+
+---
+### accounts.changePasswordByUser(userId, oldPass, newPass) {#changePasswordByUser}
+**userId** <sup>_string_</sup>: user id
+**oldPass** <sup>_string_</sup>: old password
+**newPass** <sup>_string_</sup>: new password
+
+---
+### accounts.sendVerificationEmail(emailAdress) {#sendVerificationEmail}
+**emailAdress** <sup>_string_</sup>: email adress
+
+---
+### accounts.verifyEmail(verificationCode) {#verifyEmail}
+**verificationCode** <sup>_string_</sup>: verificationCode from email
+
+---
+### accounts.sendPasswordRecoveryEmail(emailAdress) {#sendPasswordRecoveryEmail}
+**emailAdress** <sup>_string_</sup>: email adress
+
+---
+### accounts.passwordRecovery(recoveryCode, newPassword) {#passwordRecovery}
+**recoveryCode** <sup>_string_</sup>: recovery code from email
+**newPassword** <sup>_string_</sup>: email adress
+
+---
+### accounts.setUsername(userId, newUsername) {#setUsername}
+**userId** <sup>_string_</sup>: user id
+**newUsername** <sup>_string_</sup>: new username
+
+---
+### accounts.addEmail(userId, newEmail) {#addEmail}
+**userId** <sup>_string_</sup>: user id
+**newEmail** <sup>_string_</sup>: email adress
+
+---
+### accounts.removeEmail(emailAdress) {#removeEmail}
+**emailAdress** <sup>_string_</sup>: email adress
