@@ -3,9 +3,6 @@ const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 const nanoid = require('nanoid')
 const { MongoClient, ObjectId } = require('mongodb')
-const EventEmitter = require('events').EventEmitter
-const aEvents = new EventEmitter
-
 const Accounts = {}
 
 module.exports = class {
@@ -155,6 +152,7 @@ jwtSign(user, expires = 60) {
     const payload = {}
     if(user._id) payload.id = user._id
     if(user.username) payload.username = user.username
+    if(user.profile) payload.profile = user.profile
     if(user.emails.length > 0) payload.emails = user.emails
     payload.exp = (Date.now() / 1000) + expires
     const token = jwt.sign(payload, this.secret)
