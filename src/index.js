@@ -326,7 +326,7 @@ removeEmail(email) {
 }
 
 update(userId, query) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.updateOne({_id: ObjectId(userId), query})
