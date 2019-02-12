@@ -335,4 +335,14 @@ update(userId, query) {
       .catch(err => reject(self.err(err)))
   })
 }
+
+user(userId) {
+  return new Promise(async (resolve, reject) => {
+    if(await this.checkConn()) reject('HATAA')
+    const self = this
+    this.db.findOne({_id: ObjectId(userId)})
+      .then(res => resolve(res))  
+      .catch(err => reject(err))
+  })
+}
 }

@@ -1,6 +1,6 @@
 {
   "name": "dhn-accounts",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "An account management library for Node.js and MongoDB",
   "main": "./src/index.js",
   "scripts": {
