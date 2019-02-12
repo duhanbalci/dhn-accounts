@@ -324,4 +324,14 @@ removeEmail(email) {
       .catch(err => reject(self.err(err)))
   })
 }
+
+update(userId, query) {
+  return new Promise((resolve, reject) => {
+    if(await this.checkConn()) reject('HATAA')
+    const self = this
+    this.db.updateOne({_id: ObjectId(userId), query})
+      .then(res => !res.matchedCount ? reject(self.err(self.i18n[self.lang].userNotFound)): resolve())
+      .catch(err => reject(self.err(err)))
+  })
+}
 }
