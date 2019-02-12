@@ -10,6 +10,7 @@ constructor() {
   this.connectionFail = false
   this.connection = false
   this.secret = 'aADaDASdasfASFaFQWEQASDA'
+  this.jwtExpires = 604800
   this.emailVerificationEmail = {}
   this.passwordRecoveryEmail = {}
   this.emailVerificationEmail.template  =  '<a href="http://example.com/verifyEmail/{verificationCode}" >Click here</a> for validte your email adress.'
@@ -147,14 +148,14 @@ createUser(options) {
   
 }
 
-jwtSign(user, expires = 60) {
+jwtSign(user) {
   return new Promise((resolve, reject) => {
     const payload = {}
     if(user._id) payload.id = user._id
     if(user.username) payload.username = user.username
     if(user.profile) payload.profile = user.profile
     if(user.emails.length > 0) payload.emails = user.emails
-    payload.exp = (Date.now() / 1000) + expires
+    payload.exp = (Date.now() / 1000) + this.jwtExpires
     const token = jwt.sign(payload, this.secret)
     resolve(token)
   })
