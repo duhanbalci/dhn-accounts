@@ -14,17 +14,26 @@ A promise based account management library for Node.js and MongoDB
 
 #### Basic Configurations
 ```javascript
-const  dhnAccounts  =  require('dhn-accounts')
-const  accounts  =  new  dhnAccounts
+const { MongoClient } = require('mongodb')
+const dhnAccounts  = require('dhn-accounts')
+const accounts = new dhnAccounts
 
-accounts.connect('mongodb://127.0.0.1:27017/', 'database', 'collection')
-  .then(() =>  console.time('connected'))
-  .catch(err  =>  console.error(err.message))
+MongoClient.connect('mongodb://127.0.0.1:27017', { useNewUrlParser: true })
+  .then(db => {
+    accounts.init({
+      db,
+      database: 'database',
+      collection: 'users'
+    })
+  }).catch(err => console.error(err))
 
 accounts.secret = 'secretKey' // Secret key for JWT
 
 //smtp setup | optional
+const nodemailer = require('nodemailer') // not included in dhn-accounts
+
 accounts.smtpSetup({
+nodemailer, // you need to pass nodemailer by yourself
 from:  '"Duhan BALCI" <mail@duhanbalci.com>',
 host:  '',
 port:  465,

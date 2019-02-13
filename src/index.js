@@ -1,14 +1,19 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const nodemailer = require('nodemailer')
 const nanoid = require('nanoid')
-const { MongoClient, ObjectId } = require('mongodb')
+const objectid = require('./objectid')
 const Accounts = {}
+
+const ObjectId = (id) => {
+  if(objectid.isValid(id)) {
+    return new objectid(id)
+  }
+  return 'ObjectId("000000000000000000000000")'
+}
 
 module.exports = class {
 constructor() {
-  this.connectionFail = false
-  this.connection = false
+  this.mail = false
   this.secret = 'aADaDASdasfASFaFQWEQASDA'
   this.jwtExpires = 604800
   this.emailVerificationEmail = {}
@@ -33,39 +38,16 @@ constructor() {
       wrongToken: 'wrong token',
       verificationEmailFail: 'failed to send verification email',
       recoveryEmailFail: 'failed to send password recovery email',
+      smtpNotConfigured: 'smtp not configured',
     }
   }
 }
 
-checkConn() {
-  return new Promise(resolve => {
-    if(this.connection) return resolve(false)
-    if(this.connectionFail) return resolve(true)
-    const self = this
-    const interval = setInterval(() => {
-      if(self.connection) {
-        clearInterval(interval)
-        return resolve(false)
-      }
-    }, 100)
-  })
+init(opts) {
+  this.db = opts.db.db(opts.database).collection(opts.collection)
 }
 
-connect(url, database, collection = 'users') {
-  return new Promise((resolve, reject) => {
-    const self = this
-    MongoClient.connect(url, { useNewUrlParser: true }).then(db => {
-      self.connection = true
-      self.db = db.db(database).collection(collection)
-      resolve()
-    }).catch(err => {
-      self.connectionFail = true
-      reject(self.err(err))
-    })
-  })
-}
-
-smtpSetup({ host, port, secure = false, user, pass, from }) {
+smtpSetup({ nodemailer, host, port, secure = false, user, pass, from }) {
   this.mailFrom = from
   this.transporter = nodemailer.createTransport({
     host,
@@ -84,7 +66,6 @@ err(message) {
 
 uniqueControl(username, email) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     if(!username) username = false
     if(!email) email = false
     const self = this
@@ -163,7 +144,6 @@ jwtSign(user) {
 
 login(login, password) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.findOne({ $or: [ { username: login }, { 'emails.adress': login } ] }).then((res) => {
       if(!res) reject(self.err(self.i18n[self.lang].userNotFound))
@@ -190,7 +170,6 @@ verifyToken(token) {
 
 passwordControlById(id, password) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.findOne({ _id: ObjectId(id) }).then((res) => {
       if(!res) reject(self.err(self.i18n[self.lang].userNotFound))
@@ -205,7 +184,6 @@ passwordControlById(id, password) {
 
 changePassword(id, password) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.updateOne({ _id: ObjectId(id) }, { $set: { password: bcrypt.hashSync(password, 8) } })
       .then(res => {
@@ -217,7 +195,6 @@ changePassword(id, password) {
 
 changePasswordByUser(id, oldPass, newPass) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.passwordControlById(id, oldPass).then(() => {
       self.changePassword(id, newPass).then(() => resolve()).catch(err => reject(self.err(err.message)))
@@ -233,6 +210,7 @@ randomToken() { return nanoid(32) }
 
 sendMail(subject, content) {
   return new Promise((resolve, reject) => {
+    if(!this.mail) reject(this.err(this.i18n[this.lang].smtpNotConfigured))
     const self = this
     const mailOptions = {
       from: this.mailFrom,
@@ -246,7 +224,6 @@ sendMail(subject, content) {
 
 sendVerificationEmail(email) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.findOne({'emails.adress': email}).then(res => {
       if(!res) reject(self.err(self.i18n[self.lang].emailAdressNotFound))
@@ -261,7 +238,6 @@ sendVerificationEmail(email) {
 
 verifyEmail(token) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     Accounts.findOne({'emails.token': token}).then(res => {
       if(!res) reject(self.err(self.i18n[self.lang].wrongToken))
@@ -274,7 +250,6 @@ verifyEmail(token) {
 
 sendPasswordRecoveryEmail(login) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.findOne({ $or: [ { username: login }, { 'emails.adress': login } ] })
       .then(res => {
@@ -288,7 +263,6 @@ sendPasswordRecoveryEmail(login) {
 
 passwordRecovery(token, newPass) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.updateOne({token}, { $set: { password: res.password = bcrypt.hashSync(newPass, 8) } })
       .then(res => !res.matchedCount ? reject(self.err(self.i18n[self.lang].wrongToken)): resolve())
@@ -298,7 +272,6 @@ passwordRecovery(token, newPass) {
 
 setUsername(id, newUsername) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.updateOne({_id: ObjectId(id)}, { $set: { username: newUsername } })
       .then(res => !res.matchedCount ? reject(self.err(self.i18n[self.lang].userNotFound)): resolve())
@@ -308,7 +281,6 @@ setUsername(id, newUsername) {
 
 addEmail(id, email) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.updateOne({_id: ObjectId(id)},{ $push: { emails: { adress: email, verified: false, token: self.randomToken()}}})
     .then(res => !res.matchedCount ? reject(self.err(self.i18n[self.lang].userNotFound)): resolve())
@@ -318,7 +290,6 @@ addEmail(id, email) {
 
 removeEmail(email) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.updateOne({'emails.adress': email}, { $pull: { emails: { adress: email } } })
       .then(res => !res.matchedCount ? reject(self.err(self.i18n[self.lang].emailAdressNotFound)): resolve())
@@ -328,7 +299,6 @@ removeEmail(email) {
 
 update(userId, query) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.updateOne({_id: ObjectId(userId)}, query)
       .then(res => !res.matchedCount ? reject(self.err(self.i18n[self.lang].userNotFound)): resolve())
@@ -338,7 +308,6 @@ update(userId, query) {
 
 user(userId) {
   return new Promise(async (resolve, reject) => {
-    if(await this.checkConn()) reject('HATAA')
     const self = this
     this.db.findOne({_id: ObjectId(userId)})
       .then(res => resolve(res))  

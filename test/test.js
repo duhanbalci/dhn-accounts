@@ -1,27 +1,25 @@
-const assert = require('assert')
 const dhnAccounts = require('../src')
-const accounts = new dhnAccounts
+const { MongoClient } = require('mongodb')
 
+let accounts = new dhnAccounts
 const data = {}
 
 describe('dhn-accounts', () => {
   describe('connection', () => {
     it('should connect', (done) => {
-      accounts.connect('mongodb://127.0.0.1:27017', 'database')
-        .then(() => {
-          accounts.db.remove({ 'emails.adress': 'mail@example.com' })
+      MongoClient.connect('mongodb://127.0.0.1:27017', { useNewUrlParser: true }).then(db => {
+        accounts.init({
+          db,
+          database: 'database',
+          collection: 'users'
+        })
+        accounts.db.remove({ 'emails.adress': 'mail@example.com' })
           .then(() => done())
           .catch(err => done(err))
-        })
-        .catch(err => done(err.message))
-    })
-
-    it('should reject because non database entry', (done) => {
-      accounts.connect('mongodb://127.0.0.1:27017')
-        .then(() => done('err'))
-        .catch(() => done())
+      }).catch(err => done(err))
     })
   })
+
   describe('createAccount', () => {
     it('should create account', (done) => {
       accounts.createUser({
@@ -110,7 +108,7 @@ describe('dhn-accounts', () => {
     })
 
     it('shouldn\'t change password wrong id', (done) => {
-      accounts.changePasswordByUser('asdasdasdasd', '123123', 'p@ssw0rd')
+      accounts.changePasswordByUser('asdasdasdasdasd', '123123', 'p@ssw0rd')
       .then(() => done('err'))
       .catch(() => done())
     })
