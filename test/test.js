@@ -13,7 +13,7 @@ describe('dhn-accounts', () => {
           database: 'database',
           collection: 'users'
         })
-        accounts.db.remove({ 'emails.adress': 'mail@example.com' })
+        accounts.db.deleteOne({ 'emails.adress': 'mail@example.com' })
           .then(() => done())
           .catch(err => done(err))
       }).catch(err => done(err))
